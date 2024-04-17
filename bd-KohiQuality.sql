@@ -125,3 +125,12 @@ insert into ContatoSimulador(nome,email,mensagem) values
 ('Mauricio de Souza','mauriciodesouza@hotmail.com','Olá, gostaria de saber seus valores, poderia entrar em contato?');
 
 select idContato as 'ID Contato', nome as 'Nome', email as 'E-mail', mensagem as 'Mensagem' from ContatoSimulador;
+
+create table medida(
+idMedida int primary key auto_increment,
+dht11_temperatura decimal(4,2),
+dht11_umidade decimal(4,2));
+
+ALTER TABLE medida ADD COLUMN data_hora datetime;
+
+select * from medida;
