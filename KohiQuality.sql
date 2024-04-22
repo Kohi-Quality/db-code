@@ -109,3 +109,29 @@ insert into medida (fkSensor, temperatura, umidade) values
 (4, 27.1, 55.9);
 
 select * from medida;
+
+create table suporte(
+idSuporte int primary key auto_increment,
+nome varchar(45),
+email varchar(45),
+funcao varchar(45));
+
+insert into suporte values 
+(default, "Luis Gustavo", "vendas@kohi.quality.com", "Lider de vendas"),
+(default, "Vitória Lemes", "vendas@kohi.quality.com", "Lider de vendas");
+
+select * from suporte;
+
+create table contatosimulador(
+idContato int primary key auto_increment,
+fkSuporte int,
+nome varchar(40),
+email varchar(40),
+mensagem varchar(500),
+constraint fkMensagemSuporte foreign key (fkSuporte) references suporte(idSuporte));
+
+insert into contatosimulador values 
+(default,1,"Melita","contato@melita.com","Olá, adorei o sistema de monitoramento de vocês, vamos fechar um contrato ? "),
+(default,2,"Pilão","contato@pilao.com","Boa tarde ! Adorei o sistema de monitoramento de vocês, vamos logo fechar um contrato ? ");
+
+select * from contatosimulador;
