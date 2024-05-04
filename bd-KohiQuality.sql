@@ -156,12 +156,13 @@ fkMedida int,
 		references sensores(idSensor),
 tipoAlerta varchar(10),
 	constraint chkTipo check (tipoAlerta in('laranja','vermelho')),
-mensagem varchar(45)); 
+mensagem varchar(45),
+dataHora datetime); 
 
 INSERT INTO notificacoes VALUES
-(default,1,1, 'Vermelho', 'Temperatura Acima do Recomendado'),
-(default,4,9, 'Vermelho', 'Umidade Acima do Recomendado'),
-(default,1,5, 'Laranja', 'Fique atento, a Temperatura está caindo'),
-(default,3,8, 'Laranja', 'Fique atento, a Umidade está caindo');
+(default,1,1, 'Vermelho', 'Temperatura Acima do Recomendado', '2024-05-09 12:00'),
+(default,4,9, 'Vermelho', 'Umidade Acima do Recomendado', '2024-05-09 06:00'),
+(default,1,5, 'Laranja', 'Fique atento, a Temperatura está caindo', '2024-05-09 16:00'),
+(default,3,8, 'Laranja', 'Fique atento, a Umidade está caindo', '2024-05-09 17:00');
 
 SELECT * FROM notificacoes;
