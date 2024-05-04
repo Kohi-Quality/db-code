@@ -1,15 +1,6 @@
-CREATE TABLE leads (
+CREATE DATABASE KohiQuality;
 
-idLeads int primary key auto_increment,
-fkSuporte int, constraint fkSuporteLeads foreign key (fkSuporte)
-references suporte(idSuporte),
-nome varchar(45),
-email varchar(100),
-mensagem varchar(500));
-
-INSERT INTO leads VALUES 
-(default,1,"Melita","contato@melita.com","Olá, adorei o sistema de monitoramento de vocês, vamos fechar um contrato ? "),
-(default,2,"Pilão","contato@pilao.com","Boa tarde ! Adorei o sistema de monitoramento de vocês, vamos logo fechar um contrato ? ");
+USE KohiQuality;
 
 CREATE TABLE suporte (
 idSuporte int primary key auto_increment,
@@ -23,19 +14,41 @@ INSERT INTO suporte VALUES
 
 SELECT * FROM suporte;
 
+CREATE TABLE leads (
+idLeads int primary key auto_increment,
+fkSuporte int, 
+	constraint fkSuporteLeads foreign key (fkSuporte)
+		references suporte(idSuporte),
+nome varchar(45),
+email varchar(100),
+mensagem varchar(500));
+
+INSERT INTO leads VALUES 
+(default,1,"Melita","contato@melita.com","Olá, adorei o sistema de monitoramento de vocês, vamos fechar um contrato ? "),
+(default,2,"Pilão","contato@pilao.com","Boa tarde ! Adorei o sistema de monitoramento de vocês, vamos logo fechar um contrato ? ");
+
+SELECT * FROM leads;
+
 CREATE TABLE fazenda (
 idFazenda int primary key auto_increment,
-nome varchar(30),
+nome varchar(45),
 cep char(9),
 numero varchar(45),
 complemento varchar(45));
 
+INSERT INTO fazenda VALUES
+(default, 'Fazenda Santa Clara', '12345678', '1000', 'Sítio Bom Sucesso'),
+(default, 'Fazenda São Jorge', '54321098', '500', 'Km 10, Estrada do Café'),
+(default, 'Fazenda Nossa Senhora das Graças', '98765432', '1500', 'Rodovia dos Cafezais, Lote 20');
+
 CREATE TABLE usuario (
 idUsuario int primary key auto_increment,
-fkFazenda int, constraint fkFazendaUsuario foreign key (fkFazenda)
-references fazenda(idFazenda),
-fkResponsavel int, constraint fkUsuarioResponsavel foreign key (fkResponsavel)
-references usuario(idUsuario),
+fkFazenda int, 
+	constraint fkFazendaUsuario foreign key (fkFazenda)
+		references fazenda(idFazenda),
+fkResponsavel int, 
+	constraint fkUsuarioResponsavel foreign key (fkResponsavel)
+		references usuario(idUsuario),
 nomeCompleto varchar(100),
 cpf char(11),
 logradouro varchar(100),
@@ -59,13 +72,15 @@ insert into usuario (fkFazenda, fkResponsavel, nomeCompleto, cpf, logradouro, nu
 (1, NULL, 'Sérgio Costa', '90123456789', 'Travessa das Orquídeas', '909', '', 'Centro', 'SP', '123456789', 'sergio@example.com', 'senha1234'),
 (2, 3, 'Thiago Martins', '01234567890', 'Rua dos Cravos', '1010', '', 'Centro', 'RJ', '987654321', 'thiago@example.com', 'senha654');
 
+SELECT * FROM usuario;
+
 CREATE TABLE armazem (
 idArmazem int auto_increment,
 fkFazenda int,
 fkResponsavel int,
-constraint fkFazenda foreign key (fkFazenda) references fazenda(idFazenda),
-constraint pkComposta primary key (idArmazem, fkFazenda),
-constraint fkResponsavelArmazen foreign key (fkResponsavel) references usuario(idUsuario));
+	constraint fkFazenda foreign key (fkFazenda) references fazenda(idFazenda),
+	constraint pkComposta primary key (idArmazem, fkFazenda),
+	constraint fkResponsavelArmazen foreign key (fkResponsavel) references usuario(idUsuario));
 
 insert into armazem values 
 (null, 1, 3),
@@ -73,10 +88,13 @@ insert into armazem values
 (null, 2, 1),
 (null, 3, 6);
 
+SELECT * FROM armazem;
+
 CREATE TABLE graos (
 idGraos int primary key auto_increment,
-fkArmazem int, constraint fkArmazemGraos foreign key (fkArmazem)
-references armazem(idArmazem),
+fkArmazem int, 
+	constraint fkArmazemGraos foreign key (fkArmazem)
+		references armazem(idArmazem),
 nomeGrao varchar(45),
 temperaturaIdealMax float,
 temperaturaIdealMin float,
@@ -85,13 +103,16 @@ umidadeIdealMin float
 );
 
 insert into graos values 
-(null,1,'Grão de café ARÁBICA',15,10,70,60),
-(null,2,'Grão de café CONILON',15,10,70,60);
+(null,1,'Grão de café ARÁBICA',23,10,65.99,65.01),
+(null,2,'Grão de café CONILON',23,10,65.99,65.01);
+
+SELECT * FROM graos;
 
 CREATE TABLE sensores (
-idSensores int primary key auto_increment,
-fkArmazem int, constraint fkSensoresArmazem foreign key (fkArmazem)
-references armazem(idArmazem),
+idSensor int primary key auto_increment,
+fkArmazem int, 
+	constraint fkSensorArmazem foreign key (fkArmazem)
+		references armazem(idArmazem),
 posicaoSensor varchar(45));
 
 insert into sensores values
@@ -100,67 +121,47 @@ insert into sensores values
 (default,3,'No silo de madeira numero 2'),
 (default,4,'No silo de aluminio numero 3');
 
+SELECT * FROM sensores;
+
 CREATE TABLE medida (
 idMedida int primary key auto_increment,
-fkSensores int, constraint fkSensorMedida foreign key (fkSensores)
-references sensores(idSensores),
+fkSensor int, 
+	constraint fkSensorMedida foreign key (fkSensor)
+		references sensores(idSensor),
 temperatura float,
 umidade float,
-data_hora datetime
-);
+data_hora datetime);
 
-INSERT INTO medida (fkSensor, temperatura, umidade) VALUES
-(1, 25.5, 60.2),
-(2, 26.3, 58.7),
-(3, 24.8, 63.1),
-(4, 27.1, 55.9);
+INSERT INTO medida VALUES
+(default,1, 24, 65.1, '2024-05-09 12:00'),
+(default,1, 22, 65.8, '2024-05-09 13:00'),
+(default,1, 23, 66.2, '2024-05-09 14:00'),
+(default,1, 15, 65.4, '2024-05-09 15:00'),
+(default,1, 12, 65.2, '2024-05-09 16:00'),
+(default,1, 9, 65.9, '2024-05-09 17:00'),
+(default,2, 12.5, 63.7, '2024-05-09 16:30'),
+(default,3, 24.8, 63.1, '2024-05-09 17:00'),
+(default,4, 22.1, 64.3, '2024-05-09 06:00');
 
+SELECT * FROM medida;
 
+CREATE TABLE notificacoes (
+idNotificacao int auto_increment,
+fkSensor int,
+fkMedida int,
+	constraint pkNotificacaoMedidaSensor primary key (idNotificacao, fkSensor, fkMedida),
+    constraint fkNotificacaoMedida foreign key (fkMedida)
+		references medida(idMedida),
+	constraint fkNotificacaoSensor foreign key (fkSensor)
+		references sensores(idSensor),
+tipoAlerta varchar(10),
+	constraint chkTipo check (tipoAlerta in('laranja','vermelho')),
+mensagem varchar(45)); 
 
+INSERT INTO notificacoes VALUES
+(default,1,1, 'Vermelho', 'Temperatura Acima do Recomendado'),
+(default,4,9, 'Vermelho', 'Umidade Acima do Recomendado'),
+(default,1,5, 'Laranja', 'Fique atento, a Temperatura está caindo'),
+(default,3,8, 'Laranja', 'Fique atento, a Umidade está caindo');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+SELECT * FROM notificacoes;
