@@ -166,3 +166,79 @@ INSERT INTO notificacoes VALUES
 (default,3,8, 'Laranja', 'Fique atento, a Umidade está caindo', '2024-05-09 17:00');
 
 SELECT * FROM notificacoes;
+
+-- informações sobre os sensores de cada armazém, incluindo detalhes do armazém e a fazenda associada a cada armazém.
+SELECT 
+    s.idSensor,
+    s.posicaoSensor,
+    a.idArmazem,
+    f.idFazenda,
+    f.nome AS nomeFazenda,
+    f.cep,
+    f.numero AS numeroFazenda,
+    f.complemento AS complementoFazenda
+FROM 
+    sensores s
+JOIN 
+    armazem a ON s.fkArmazem = a.idArmazem
+JOIN 
+    fazenda f ON a.fkFazenda = f.idFazenda;
+    
+    --  Consulta para obter informações sobre os usuários (responsáveis) de cada armazém, 
+     -- incluindo também os detalhes da fazenda associada a cada armazém.
+     
+SELECT 
+    u.idUsuario,
+    u.nomeCompleto AS nomeResponsavel,
+    a.idArmazem,
+    f.idFazenda,
+    f.nome AS nomeFazenda,
+    f.cep,
+    f.numero AS numeroFazenda,
+    f.complemento AS complementoFazenda
+FROM 
+    usuario u
+JOIN 
+    armazem a ON u.fkFazenda = a.fkFazenda
+JOIN 
+    fazenda f ON a.fkFazenda = f.idFazenda
+WHERE
+    u.fkResponsavel IS NULL;
+    
+    
+--  Obter informações sobre os sensores e as medidas registradas por cada sensor.
+    
+SELECT 
+    s.idSensor,
+    s.posicaoSensor,
+    m.idMedida,
+    m.temperatura,
+    m.umidade,
+    m.data_hora
+FROM 
+    sensores s
+JOIN 
+    medida m ON s.idSensor = m.fkSensor;
+    
+    
+-- obter informações sobre as notificações associadas a cada medida registrada por um sensor específico.
+
+SELECT 
+    s.idSensor,
+    s.posicaoSensor,
+    m.idMedida,
+    m.temperatura,
+    m.umidade,
+    m.data_hora,
+    n.idNotificacao,
+    n.tipoAlerta,
+    n.mensagem,
+    n.dataHora AS dataHoraNotificacao
+FROM 
+    sensores s
+JOIN 
+    medida m ON s.idSensor = m.fkSensor
+JOIN
+    notificacoes n ON m.idMedida = n.fkMedida AND n.fkSensor = s.idSensor;
+    
+     
