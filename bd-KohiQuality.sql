@@ -14,6 +14,11 @@ INSERT INTO suporte VALUES
 
 SELECT * FROM suporte;
 
+select nome as 'Resposável' ,
+	email as 'Email Suporte',
+    funcao as 'Função Interna de Suporte'
+from suporte;
+
 CREATE TABLE leads (
 idLeads int primary key auto_increment,
 fkSuporte int, 
@@ -28,6 +33,13 @@ INSERT INTO leads VALUES
 (default,2,"Pilão","contato@pilao.com","Boa tarde ! Adorei o sistema de monitoramento de vocês, vamos logo fechar um contrato ? ");
 
 SELECT * FROM leads;
+
+select leads.nome as 'Nome Empresa',
+	leads.email as 'Email Empresa',
+    suporte.nome as 'Membro Responsável Pelo Suporte',
+	suporte.email as 'Email suporte',
+	mensagem as 'Mensagem Empresa'    
+from leads join suporte on fkSuporte = idSuporte;
 
 CREATE TABLE fazenda (
 idFazenda int primary key auto_increment,
@@ -74,8 +86,20 @@ insert into usuario (fkFazenda, fkResponsavel, nomeCompleto, cpf, logradouro, nu
 
 SELECT * FROM usuario;
 
+select usuario.nomeCompleto as 'Nome Usuário',
+	responsavel.nomeCompleto as 'Nome Responsável',
+	usuario.email as 'Email usuário',
+    fazenda.
+    nome as 'Nome Fazenda'
+    from usuario join fazenda on fkFazenda = idFazenda
+    join usuario as responsavel
+    on responsavel.idUsuario = usuario.fkResponsavel;
+    
+SELECT COUNT(idUsuario) as 'Quantidade de usuários' FROM usuario;
+
 CREATE TABLE armazem (
 idArmazem int auto_increment,
+nome varchar(45),
 fkFazenda int,
 fkResponsavel int,
 	constraint fkFazenda foreign key (fkFazenda) references fazenda(idFazenda),
@@ -83,13 +107,22 @@ fkResponsavel int,
 	constraint fkResponsavelArmazen foreign key (fkResponsavel) references usuario(idUsuario));
 
 insert into armazem values 
-(null, 1, 3),
-(null, 1, 3),
-(null, 2, 1),
-(null, 3, 6);
+(null,"Beta" ,1, 3),
+(null,"Alpha",1, 3),
+(null,"Gama",2, 1),
+(null,"Delta",3, 6);
 
 SELECT * FROM armazem;
 
+/*select armazem.nome as 'Nome Armazem',
+	fazenda.nome as 'Nome Fazenda',
+	responsavel.nomeCompleto as 'Nome Responsavel do Armazem'
+    from armazem 
+    join fazenda on fkFazenda = idFazenda
+    right join usuario as responsavel
+    on responsavel.idUsuario;
+*/
+    
 CREATE TABLE graos (
 idGraos int primary key auto_increment,
 fkArmazem int, 
@@ -108,12 +141,20 @@ insert into graos values
 
 SELECT * FROM graos;
 
+select nomeGrao as 'Nome Grão',
+	armazem.nome as 'Nome Armazem',
+    temperaturaIdealMax as 'Temperatura ideal máxima',
+    temperaturaIdealMin as 'Temperatura ideal mínima',
+    umidadeIdealMax as 'Umidade ideal máxima',
+    umidadeIdealMin as 'Umidade ideal mínima' 
+    from graos join armazem on fkArmazem = idArmazem;
+
 CREATE TABLE sensores (
 idSensor int primary key auto_increment,
-fkArmazem int, 
+fkArmazem int,
+posicao varchar(45), 
 	constraint fkSensorArmazem foreign key (fkArmazem)
-		references armazem(idArmazem),
-posicaoSensor varchar(45));
+		references armazem(idArmazem));
 
 insert into sensores values
 (default,1,'No silo de madeira numero 4'),
@@ -122,6 +163,14 @@ insert into sensores values
 (default,4,'No silo de aluminio numero 3');
 
 SELECT * FROM sensores;
+
+select idSensor as 'Id Do Sensor',
+	armazem.nome as 'Nome Armazem',
+    posicao as 'Localização do Sensor'
+    from sensores
+    join armazem on fkArmazem = idArmazem;
+    
+SELECT COUNT(idSensor) as 'Quantidade de Sensores' FROM sensores;
 
 CREATE TABLE medida (
 idMedida int primary key auto_increment,
