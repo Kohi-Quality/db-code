@@ -232,24 +232,7 @@ JOIN
     medida m ON s.idSensor = m.fkSensor;
     
     
--- obter informações sobre as notificações associadas a cada medida registrada por um sensor específico.
+    
 
-SELECT 
-    s.idSensor,
-    s.posicaoSensor,
-    m.idMedida,
-    m.temperatura,
-    m.umidade,
-    m.data_hora,
-    n.idNotificacao,
-    n.tipoAlerta,
-    n.mensagem,
-    n.dataHora AS dataHoraNotificacao
-FROM 
-    sensores s
-JOIN 
-    medida m ON s.idSensor = m.fkSensor
-JOIN
-    notificacoes n ON m.idMedida = n.fkMedida AND n.fkSensor = s.idSensor;
     
      
