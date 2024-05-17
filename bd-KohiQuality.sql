@@ -97,27 +97,27 @@ select usuario.nomeCompleto as 'Nome Usuário',
     
 SELECT COUNT(idUsuario) as 'Quantidade de usuários' FROM usuario;
 
-CREATE TABLE armazem (
-idArmazem int auto_increment,
+CREATE TABLE Silo (
+idSilo int auto_increment,
 nome varchar(45),
 fkFazenda int,
 fkResponsavel int,
 	constraint fkFazenda foreign key (fkFazenda) references fazenda(idFazenda),
-	constraint pkComposta primary key (idArmazem, fkFazenda),
-	constraint fkResponsavelArmazen foreign key (fkResponsavel) references usuario(idUsuario));
+	constraint pkComposta primary key (idSilo, fkFazenda),
+	constraint fkResponsavelSilo foreign key (fkResponsavel) references usuario(idUsuario));
 
-insert into armazem values 
+insert into silo values 
 (null,"Beta" ,1, 3),
 (null,"Alpha",1, 3),
 (null,"Gama",2, 1),
 (null,"Delta",3, 6);
 
-SELECT * FROM armazem;
+SELECT * FROM silo;
 
-/*select armazem.nome as 'Nome Armazem',
+/*select silo.nome as 'Nome Silo',
 	fazenda.nome as 'Nome Fazenda',
-	responsavel.nomeCompleto as 'Nome Responsavel do Armazem'
-    from armazem 
+	responsavel.nomeCompleto as 'Nome Responsavel do Silo'
+    from silo
     join fazenda on fkFazenda = idFazenda
     right join usuario as responsavel
     on responsavel.idUsuario;
@@ -125,15 +125,18 @@ SELECT * FROM armazem;
     
 CREATE TABLE graos (
 idGraos int primary key auto_increment,
-fkArmazem int, 
-	constraint fkArmazemGraos foreign key (fkArmazem)
-		references armazem(idArmazem),
+fkSilo int, 
+	constraint fkSiloGraos foreign key (fkSilo)
+		references silo(idSilo),
 nomeGrao varchar(45),
 temperaturaIdealMax float,
 temperaturaIdealMin float,
 umidadeIdealMax float,
-umidadeIdealMin float
-);
+umidadeIdealMin float,
+mensagemEstavel varchar(45),
+mensagemAlerta varchar(45),
+mensagemCritico varchar(45));
+
 
 insert into graos values 
 (null,1,'Grão de café ARÁBICA',23,10,65.99,65.01),
@@ -142,19 +145,19 @@ insert into graos values
 SELECT * FROM graos;
 
 select nomeGrao as 'Nome Grão',
-	armazem.nome as 'Nome Armazem',
+	silo.nome as 'Nome Silo',
     temperaturaIdealMax as 'Temperatura ideal máxima',
     temperaturaIdealMin as 'Temperatura ideal mínima',
     umidadeIdealMax as 'Umidade ideal máxima',
     umidadeIdealMin as 'Umidade ideal mínima' 
-    from graos join armazem on fkArmazem = idArmazem;
+    from graos join silo on fkSilo = idSilo;
 
 CREATE TABLE sensores (
 idSensor int primary key auto_increment,
-fkArmazem int,
+fkSilo int,
 posicao varchar(45), 
-	constraint fkSensorArmazem foreign key (fkArmazem)
-		references armazem(idArmazem));
+	constraint fkSensorSilo foreign key (fkSilo)
+		references silo(idSilo));
 
 insert into sensores values
 (default,1,'No silo de madeira numero 4'),
@@ -165,10 +168,10 @@ insert into sensores values
 SELECT * FROM sensores;
 
 select idSensor as 'Id Do Sensor',
-	armazem.nome as 'Nome Armazem',
+	silo.nome as 'Nome Silo',
     posicao as 'Localização do Sensor'
     from sensores
-    join armazem on fkArmazem = idArmazem;
+    join armazem on fkSilo = idSilo;
     
 SELECT COUNT(idSensor) as 'Quantidade de Sensores' FROM sensores;
 
@@ -194,52 +197,11 @@ INSERT INTO medida VALUES
 
 SELECT * FROM medida;
 
-CREATE TABLE notificacoes (
-idNotificacao int auto_increment,
-fkSensor int,
-fkMedida int,
-	constraint pkNotificacaoMedidaSensor primary key (idNotificacao, fkSensor, fkMedida),
-    constraint fkNotificacaoMedida foreign key (fkMedida)
-		references medida(idMedida),
-	constraint fkNotificacaoSensor foreign key (fkSensor)
-		references sensores(idSensor),
-tipoAlerta varchar(10),
-	constraint chkTipo check (tipoAlerta in('laranja','vermelho')),
-mensagem varchar(45),
-dataHora datetime); 
-
-INSERT INTO notificacoes VALUES
-(default,1,1, 'Vermelho', 'Temperatura Acima do Recomendado', '2024-05-09 12:00'),
-(default,4,9, 'Vermelho', 'Umidade Acima do Recomendado', '2024-05-09 06:00'),
-(default,1,5, 'Laranja', 'Fique atento, a Temperatura está caindo', '2024-05-09 16:00'),
-(default,3,8, 'Laranja', 'Fique atento, a Umidade está caindo', '2024-05-09 17:00');
-
-SELECT * FROM notificacoes;
-
--- informações sobre os sensores de cada armazém, incluindo detalhes do armazém e a fazenda associada a cada armazém.
-SELECT 
-    s.idSensor,
-    s.posicaoSensor,
-    a.idArmazem,
-    f.idFazenda,
-    f.nome AS nomeFazenda,
-    f.cep,
-    f.numero AS numeroFazenda,
-    f.complemento AS complementoFazenda
-FROM 
-    sensores s
-JOIN 
-    armazem a ON s.fkArmazem = a.idArmazem
-JOIN 
-    fazenda f ON a.fkFazenda = f.idFazenda;
-    
-    --  Consulta para obter informações sobre os usuários (responsáveis) de cada armazém, 
-     -- incluindo também os detalhes da fazenda associada a cada armazém.
      
 SELECT 
     u.idUsuario,
     u.nomeCompleto AS nomeResponsavel,
-    a.idArmazem,
+    a.idSilo,
     f.idFazenda,
     f.nome AS nomeFazenda,
     f.cep,
@@ -248,9 +210,9 @@ SELECT
 FROM 
     usuario u
 JOIN 
-    armazem a ON u.fkFazenda = a.fkFazenda
+    silo s ON u.fkSilo = s.fkSilo
 JOIN 
-    fazenda f ON a.fkFazenda = f.idFazenda
+    fazenda f ON s.fkFazenda = f.idFazenda
 WHERE
     u.fkResponsavel IS NULL;
     
