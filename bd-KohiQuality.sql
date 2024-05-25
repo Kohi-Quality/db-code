@@ -1,7 +1,4 @@
-CREATE DATABASE KohiQuality;
-
 USE KohiQuality;
-
 CREATE TABLE suporte (
 idSuporte int primary key auto_increment,
 nome varchar(45),
@@ -138,9 +135,9 @@ mensagemAlerta varchar(45),
 mensagemCritico varchar(45));
 
 
-insert into graos values 
-(null,1,'Grão de café ARÁBICA',23,10,65.99,65.01),
-(null,2,'Grão de café CONILON',23,10,65.99,65.01);
+insert into graos(fkSilo, nomeGrao, temperaturaIdealMax, temperaturaIdealMin, umidadeIdealMax, umidadeIdealMin) values 
+(1,'Grão de café ARÁBICA',23,10,65.99,65.01),
+(2,'Grão de café CONILON',23,10,65.99,65.01);
 
 SELECT * FROM graos;
 
@@ -168,10 +165,8 @@ insert into sensores values
 SELECT * FROM sensores;
 
 select idSensor as 'Id Do Sensor',
-	silo.nome as 'Nome Silo',
-    posicao as 'Localização do Sensor'
-    from sensores
-    join armazem on fkSilo = idSilo;
+	silo.nome as 'Nome Silo' from sensores
+    join silo on fkSilo = idSilo;
     
 SELECT COUNT(idSensor) as 'Quantidade de Sensores' FROM sensores;
 
@@ -196,43 +191,38 @@ INSERT INTO medida VALUES
 (default,4, 22.1, 64.3, '2024-05-09 06:00');
 
 SELECT * FROM medida;
-
      
 SELECT 
     u.idUsuario,
     u.nomeCompleto AS nomeResponsavel,
-    a.idSilo,
+    u.email,
+    u.senha,
+    s.idSilo,
     f.idFazenda,
     f.nome AS nomeFazenda,
     f.cep,
     f.numero AS numeroFazenda,
     f.complemento AS complementoFazenda
 FROM 
-    usuario u
+    usuario as u
 JOIN 
-    silo s ON u.fkSilo = s.fkSilo
+    silo as s ON u.idUsuario = s.fkResponsavel
 JOIN 
-    fazenda f ON s.fkFazenda = f.idFazenda
+    fazenda as f ON s.fkFazenda = f.idFazenda
 WHERE
-    u.fkResponsavel IS NULL;
-    
+    u.email = 'ana@example.com' AND u.senha = 'senha123';
     
 --  Obter informações sobre os sensores e as medidas registradas por cada sensor.
     
 SELECT 
     s.idSensor,
-    s.posicaoSensor,
     m.idMedida,
     m.temperatura,
     m.umidade,
-    m.data_hora
+	DATE_FORMAT(m.data_hora,'%H:%i:%s') as momento_grafico
 FROM 
     sensores s
 JOIN 
-    medida m ON s.idSensor = m.fkSensor;
-    
-    
-    
-
-    
-     
+    medida m ON s.idSensor = m.fkSensor 
+WHERE fkSensor = 1
+    ORDER BY idMedida DESC LIMIT 3;
