@@ -1,25 +1,25 @@
-CREATE DATABASE KohiQuality;
+create database KohiQuality;
 
-USE KohiQuality;
+use KohiQuality;
 
-CREATE TABLE suporte (
+create table suporte (
 idSuporte int primary key auto_increment,
 nome varchar(45),
 email varchar(100),
 funcao varchar (45));
 
-INSERT INTO suporte VALUES 
-(default, "Luis Gustavo", "vendas@kohi.quality.com", "Lider de vendas"),
+insert into suporte values
+(default, "Felipe Medina", "vendas@kohi.quality.com", "Gestor de vendas"),
 (default, "Vitória Lemes", "vendas@kohi.quality.com", "Lider de vendas");
 
-SELECT * FROM suporte;
+select * from suporte;
 
 select nome as 'Resposável' ,
 	email as 'Email Suporte',
     funcao as 'Função Interna de Suporte'
 from suporte;
 
-CREATE TABLE leads (
+create table leads (
 idLeads int primary key auto_increment,
 fkSuporte int, 
 	constraint fkSuporteLeads foreign key (fkSuporte)
@@ -28,11 +28,11 @@ nome varchar(45),
 email varchar(100),
 mensagem varchar(500));
 
-INSERT INTO leads VALUES 
+insert into leads values 
 (default,1,"Melita","contato@melita.com","Olá, adorei o sistema de monitoramento de vocês, vamos fechar um contrato ? "),
 (default,2,"Pilão","contato@pilao.com","Boa tarde ! Adorei o sistema de monitoramento de vocês, vamos logo fechar um contrato ? ");
 
-SELECT * FROM leads;
+select * from leads;
 
 select leads.nome as 'Nome Empresa',
 	leads.email as 'Email Empresa',
@@ -41,19 +41,19 @@ select leads.nome as 'Nome Empresa',
 	mensagem as 'Mensagem Empresa'    
 from leads join suporte on fkSuporte = idSuporte;
 
-CREATE TABLE fazenda (
+create table fazenda (
 idFazenda int primary key auto_increment,
 nome varchar(45),
 cep char(9),
 numero varchar(45),
 complemento varchar(45));
 
-INSERT INTO fazenda VALUES
+insert into fazenda values
 (default, 'Fazenda Santa Clara', '12345678', '1000', 'Sítio Bom Sucesso'),
 (default, 'Fazenda São Jorge', '54321098', '500', 'Km 10, Estrada do Café'),
 (default, 'Fazenda Nossa Senhora das Graças', '98765432', '1500', 'Rodovia dos Cafezais, Lote 20');
 
-CREATE TABLE usuario (
+create table usuario (
 idUsuario int primary key auto_increment,
 fkFazenda int, 
 	constraint fkFazendaUsuario foreign key (fkFazenda)
@@ -73,18 +73,14 @@ email varchar(45),
 senha varchar(45));
 
 insert into usuario (fkFazenda, fkResponsavel, nomeCompleto, cpf, logradouro, numero, complemento, bairro, estado, numeroTelefone, email, senha) values
-(1, NULL, 'Ana Silva', '12345678901', 'Rua das Palmeiras', '101', '', 'Centro', 'SP', '111222333', 'ana@example.com', 'senha123'),
-(2, 1, 'Marcos Oliveira', '23456789012', 'Avenida Central', '202', 'Bloco A', 'Jardins', 'RJ', '444555666', 'marcos@example.com', 'abc123'),
-(3, NULL, 'Carla Pereira', '34567890123', 'Travessa dos Lírios', '303', '', 'Centro', 'MG', '777888999', 'carla@example.com', 'senha456'),
-(1, 2, 'Lucas Santos', '45678901234', 'Rua das Acácias', '404', '', 'Liberdade', 'SP', '999888777', 'lucas@example.com', 'xyz789'),
-(2, NULL, 'Fernanda Souza', '56789012345', 'Alameda dos Ipês', '505', '', 'Novo Mundo', 'RJ', '333222111', 'fernanda@example.com', 'senha456'),
-(1, 1, 'Gabriel Lima', '67890123456', 'Avenida dos Girassóis', '606', 'Casa 2', 'Praia', 'SP', '666777888', 'gabriel@example.com', 'senhaabc'),
-(2, NULL, 'Juliana Castro', '78901234567', 'Rua das Violetas', '707', '', 'Floresta', 'RJ', '555444333', 'juliana@example.com', 'novasenha'),
-(3, 2, 'Rafaela Almeida', '89012345678', 'Rua dos Jasmins', '808', '', 'Jardim', 'MG', '222333444', 'rafaela@example.com', 'outrasenha'),
-(1, NULL, 'Sérgio Costa', '90123456789', 'Travessa das Orquídeas', '909', '', 'Centro', 'SP', '123456789', 'sergio@example.com', 'senha1234'),
-(2, 3, 'Thiago Martins', '01234567890', 'Rua dos Cravos', '1010', '', 'Centro', 'RJ', '987654321', 'thiago@example.com', 'senha654');
+(1, NULL, 'Felipe Albertim', '56789013216', 'Rua das Palmeiras', '101', '', 'Centro', 'SP', '111222333', 'felipe.a@gmail.com', 'albertimDEV!'),
+(1, 1, 'Felipe Medina', '23456789012', 'Avenida Central', '202', 'Bloco A', 'Jardins', 'RJ', '444555666', 'felipe.m@gmail.com', 'medinaDEV!'),
+(1, NULL, 'Matheus Essu', '34567890123', 'Travessa dos Lírios', '303', '', 'Centro', 'MG', '777888999', 'matheus@gmail.com', 'guedesDEV!'),
+(1, 2, 'Rafaella Guedes', '45678901234', 'Rua das Acácias', '404', '', 'Liberdade', 'SP', '999888777', 'rafaella@gmail.com', 'guedesDEV!'),
+(1, NULL, 'Vitória Lemes', '56789012345', 'Alameda dos Ipês', '505', '', 'Novo Mundo', 'RJ', '333222111', 'vitoria@gmail.com', 'lemesDEV!');
 
-SELECT * FROM usuario;
+
+select * from usuario;
 
 select usuario.nomeCompleto as 'Nome Usuário',
 	responsavel.nomeCompleto as 'Nome Responsável',
@@ -95,9 +91,9 @@ select usuario.nomeCompleto as 'Nome Usuário',
     join usuario as responsavel
     on responsavel.idUsuario = usuario.fkResponsavel;
     
-SELECT COUNT(idUsuario) as 'Quantidade de usuários' FROM usuario;
+select COUNT(idUsuario) as 'Quantidade de usuários' from usuario;
 
-CREATE TABLE silo (
+create table silo (
 idSilo int auto_increment,
 nome varchar(45),
 fkFazenda int,
@@ -108,22 +104,13 @@ fkResponsavel int,
 
 insert into silo values 
 (null,"Beta" ,1, 3),
-(null,"Alpha",1, 3),
+(null,"Alpha",1, 2),
 (null,"Gama",2, 1),
-(null,"Delta",3, 6);
+(null,"Delta",3, 4);
 
-SELECT * FROM silo;
+select * from silo;
 
-/*select silo.nome as 'Nome Silo',
-	fazenda.nome as 'Nome Fazenda',
-	responsavel.nomeCompleto as 'Nome Responsavel do Silo'
-    from silo
-    join fazenda on fkFazenda = idFazenda
-    right join usuario as responsavel
-    on responsavel.idUsuario;
-*/
-    
-CREATE TABLE graos (
+create table graos (
 idGraos int primary key auto_increment,
 fkSilo int, 
 	constraint fkSiloGraos foreign key (fkSilo)
@@ -140,9 +127,9 @@ mensagemCritico varchar(45));
 
 insert into graos(fkSilo, nomeGrao, temperaturaIdealMax, temperaturaIdealMin, umidadeIdealMax, umidadeIdealMin) values 
 (1,'Grão de café ARÁBICA',23,10,65.99,65.01),
-(2,'Grão de café CONILON',23,10,65.99,65.01);
+(2,'Grão de café ConILon',23,10,65.99,65.01);
 
-SELECT * FROM graos;
+select * from graos;
 
 select nomeGrao as 'Nome Grão',
 	silo.nome as 'Nome Silo',
@@ -152,7 +139,7 @@ select nomeGrao as 'Nome Grão',
     umidadeIdealMin as 'Umidade ideal mínima' 
     from graos join silo on fkSilo = idSilo;
 
-CREATE TABLE sensores (
+create table sensores (
 idSensor int primary key auto_increment,
 fkSilo int,
 posicao varchar(45), 
@@ -165,15 +152,15 @@ insert into sensores values
 (default,3,'No silo de madeira numero 2'),
 (default,4,'No silo de aluminio numero 3');
 
-SELECT * FROM sensores;
+select * from sensores;
 
 select idSensor as 'Id Do Sensor',
 	silo.nome as 'Nome Silo' from sensores
     join silo on fkSilo = idSilo;
     
-SELECT COUNT(idSensor) as 'Quantidade de Sensores' FROM sensores;
+select COUNT(idSensor) as 'Quantidade de Sensores' from sensores;
 
-CREATE TABLE medida (
+create table medida (
 idMedida int primary key auto_increment,
 fkSensor int, 
 	constraint fkSensorMedida foreign key (fkSensor)
@@ -182,42 +169,42 @@ temperatura float,
 umidade float,
 data_hora datetime default current_timestamp);
 
-INSERT INTO medida VALUES
+insert into medida values
 (default,1, 22.1, 64.3, '2024-06-06 17:09:25');
 
-SELECT * FROM medida;
+select * from medida;
      
-SELECT 
+select 
     u.idUsuario,
-    u.nomeCompleto AS nomeResponsavel,
+    u.nomeCompleto as nomeResponsavel,
     u.email,
     u.senha,
     s.idSilo,
     f.idFazenda,
-    f.nome AS nomeFazenda,
+    f.nome as nomeFazenda,
     f.cep,
-    f.numero AS numeroFazenda,
-    f.complemento AS complementoFazenda
-FROM 
+    f.numero as numeroFazenda,
+    f.complemento as complementoFazenda
+from 
     usuario as u
-JOIN 
-    silo as s ON u.idUsuario = s.fkResponsavel
-JOIN 
-    fazenda as f ON s.fkFazenda = f.idFazenda
-WHERE
-    u.email = 'ana@example.com' AND u.senha = 'senha123';
+join 
+    silo as s on u.idUsuario = s.fkResponsavel
+join 
+    fazenda as f on s.fkFazenda = f.idFazenda
+where
+    u.email = 'felipe.a@gmail.com' AND u.senha = 'albertimDEV!';
     
---  Obter informações sobre os sensores e as medidas registradas por cada sensor.
+
     
-SELECT 
+select 
     s.idSensor,
     m.idMedida,
     m.temperatura,
     m.umidade,
-	DATE_FORMAT(m.data_hora,'%H:%i:%s') as momento_grafico
-FROM 
+	date_format(m.data_hora,'%H:%i:%s') as momento_grafico
+from 
     sensores s
-JOIN 
-    medida m ON s.idSensor = m.fkSensor 
-WHERE fkSensor = 1
-    ORDER BY idMedida DESC LIMIT 3;
+join 
+    medida m on s.idSensor = m.fkSensor 
+where fkSensor = 1
+    order by idMedida desc limit 3;
